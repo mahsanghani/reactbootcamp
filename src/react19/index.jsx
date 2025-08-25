@@ -1,4 +1,5 @@
 import { memo, useState, useTransition } from 'react'
+import { updateNameInDB } from "./api"
 import ReactDOM from 'react-dom/client'
 import { sleep } from "./utils"
 import products from "./data"
@@ -11,6 +12,20 @@ function App() {
             setTab(tab)
         })
     }
+
+    const [name, setName] = useState(
+        () => JSON.parse(localStorage.getItem("name")) || "Anonymous user"
+    )
+
+    async function formAction(formData) {
+        try {
+            const newName = await updateNameInDB(formData.get("name"))
+            setName(newName)
+        } catch (error) {
+            console.error(error.message)
+        }
+    }
+
 
     function setStyles(thisTab) {
         return {
